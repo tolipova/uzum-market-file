@@ -40,6 +40,20 @@ def filter_by_category(category, database):
             filtered_items.append(entry)
     return filtered_items
 
+def seller():
+    item_category = input("Enter the category of the item: ")
+    item_name = input("Enter the name of the item: ")
+    item_seller = input("Enter the seller's name: ")
+    item_dastavka = input("Enter product delivery time: ")
+    item_price = int(input("Enter the product price: "))  # Convert to int
+    item_quantity = int(input("Enter the item quantity: "))  # Convert to int
+    item_assessments = int(input("Enter how many people liked this item: "))  # Convert to int
+    item_order = int(input("Enter how many people ordered: "))  # Convert to int
+
+    # Save the item to the database
+    save_items(item_category, item_name, item_seller, item_dastavka, item_price, item_quantity, item_assessments, item_order)
+    print("Item saved successfully.")
+
 def buyer(item_name, item_quantity, item_price, database):
     name = input("Enter the name of the item to buy: ")
     for entry in database:
@@ -65,16 +79,23 @@ def main():
                 print(entry)
         else:
             print("No items found for the specified category")
+            
     else:
         while True:
             choice = input("Choose 'seller' or 'buyer': ").lower()
             if choice == 'seller':
-                # Add code for seller actions
-                pass
+                seller()  # Call the seller function
             elif choice == 'buyer':
                 database = load_database()
                 user_input = get_user_input()
-                buyer(user_input, database)
+                item = ask_item(user_input, database)
+                if item:
+                    item_name = item['item_name']
+                    item_price = item['item_price']
+                    item_quantity = item['item_quantity']
+                    buyer(item_name, item_quantity, item_price, database)
+                else:
+                    print("Item not found.")
             else:
                 print("Invalid choice. Please choose 'seller' or 'buyer'.")
 
